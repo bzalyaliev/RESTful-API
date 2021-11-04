@@ -4,6 +4,8 @@ import com.example.socks.model.Sock;
 import com.example.socks.repository.SockEntity;
 import com.example.socks.repository.SockRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,4 +32,20 @@ public class SocksController {
         return sockRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Could not find sock"));
     }
-}
+
+    @DeleteMapping(value = "/{id}")
+    void deleteSock(@PathVariable Long id) {
+        sockRepository.deleteById(id);
+    }
+
+    @PatchMapping(value = "/{id}")
+    public SockEntity patchSocks(@PathVariable Long id, @RequestBody Sock sock) {
+        SockEntity sockEntity = sockRepository.findById(id).get();
+            sockEntity.setColor(sock.getColor());
+            sockEntity.setCottonPart(sock.getCottonPart());
+            return sockRepository.save(sockEntity);
+
+        }
+    }
+
+
