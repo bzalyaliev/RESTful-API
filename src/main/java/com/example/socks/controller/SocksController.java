@@ -28,6 +28,6 @@ public class SocksController {
     @GetMapping(value = "/{id}")
     SockEntity one(@PathVariable Long id) {
         return sockRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Could not find sock"));
+                .orElseThrow(() -> new NotFoundException("Could not find sock"));
     }
 }
