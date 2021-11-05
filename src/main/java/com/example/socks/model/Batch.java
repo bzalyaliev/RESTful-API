@@ -5,11 +5,9 @@ import lombok.Value;
 
 @Value
 @Builder
-public class Sock {
-
+public class Batch {
     String color;
     int cottonPart;
     int quantity;
-
 
 }

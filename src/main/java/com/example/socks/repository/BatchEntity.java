@@ -1,10 +1,18 @@
 package com.example.socks.repository;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "sock")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BatchEntity {
     @Id
     @Column(name = "id")
