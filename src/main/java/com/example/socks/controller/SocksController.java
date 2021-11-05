@@ -44,7 +44,6 @@ public class SocksController {
             sockEntity.setColor(sock.getColor());
             sockEntity.setCottonPart(sock.getCottonPart());
             return sockRepository.save(sockEntity);
-
         }
     }
 
