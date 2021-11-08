@@ -4,7 +4,13 @@ import com.example.socks.model.Batch;
 import com.example.socks.repository.BatchRepository;
 import com.example.socks.repository.BatchEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/socks")
@@ -35,10 +41,10 @@ public class BatchController {
 
     @PatchMapping(value = "/{id}")
     public BatchEntity patchBatch(@PathVariable Long id, @RequestBody Batch batch) {
-        BatchEntity batchEntity = batchRepository.findById(id).get();
-        batchEntity.setColor(batch.getColor());
-        batchEntity.setCottonPart(batch.getCottonPart());
-        batchEntity.setQuantity((batch.getQuantity()));
+        BatchEntity batchEntity = batchRepository.findById(id).get()
+                .setColor(batch.getColor())
+                .setCottonPart(batch.getCottonPart())
+                .setQuantity((batch.getQuantity()));
         return batchRepository.save(batchEntity);
     }
 }
