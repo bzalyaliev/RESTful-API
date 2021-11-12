@@ -29,12 +29,13 @@ public class BatchController {
 
     @PostMapping(value = "/outcome")
     public Integer outcomeSocks(@Valid @RequestBody Batch batch) {
-        for (int i = 0; i < batch.getQuantity(); i++) {
-            for (BatchEntity batchEntity : batchRepository.findAll()) {
-                if (batch.getCottonPart() == batchEntity.getCottonPart()) {
-                    batchRepository.delete(batchEntity);
-                }
-            }
+        for (int i = 0; i < batch.getQuantity(); i++){
+            batchRepository.delete(BatchEntity
+                    .builder()
+                    .color(batch.getColor())
+                    .cottonPart(batch.getCottonPart())
+                    .quantity(1)
+                    .build());
         }
         return 10;
     }
