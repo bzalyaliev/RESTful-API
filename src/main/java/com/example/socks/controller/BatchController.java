@@ -4,13 +4,9 @@ import com.example.socks.model.Batch;
 import com.example.socks.repository.BatchRepository;
 import com.example.socks.repository.BatchEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/socks")
@@ -19,13 +15,28 @@ public class BatchController {
     private final BatchRepository batchRepository;
 
     @PostMapping(value = "/income")
-    public BatchEntity incomeSocks(@RequestBody Batch batch) {
-        return batchRepository.save(BatchEntity
-                .builder()
-                .color(batch.getColor())
-                .cottonPart(batch.getCottonPart())
-                .quantity(batch.getQuantity())
-                .build());
+    public Integer incomeSocks(@Valid @RequestBody Batch batch) {
+        for (int i = 0; i < batch.getQuantity(); i++){
+            batchRepository.save(BatchEntity
+                    .builder()
+                    .color(batch.getColor())
+                    .cottonPart(batch.getCottonPart())
+                    .quantity(1)
+                    .build());
+        }
+        return 10;
+    }
+
+    @PostMapping(value = "/outcome")
+    public Integer outcomeSocks(@Valid @RequestBody Batch batch) {
+        for (int i = 0; i < batch.getQuantity(); i++) {
+            for (BatchEntity batchEntity : batchRepository.findAll()) {
+                if (batch.getCottonPart() == batchEntity.getCottonPart()) {
+                    batchRepository.delete(batchEntity);
+                }
+            }
+        }
+        return 10;
     }
 
     @GetMapping(value = "/{id}")
