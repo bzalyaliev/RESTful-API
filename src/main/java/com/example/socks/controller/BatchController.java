@@ -24,7 +24,6 @@ public class BatchController {
                     .quantity(1)
                     .build());
         }
-        return 10;
     }
 
     @PostMapping(value = "/outcome")
