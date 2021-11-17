@@ -4,8 +4,16 @@ import com.example.socks.model.Batch;
 import com.example.socks.repository.BatchRepository;
 import com.example.socks.repository.BatchEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
 
 @RestController
@@ -15,9 +23,12 @@ public class BatchController {
     private final BatchRepository batchRepository;
 
     @PostMapping(value = "/income")
-    public Integer incomeSocks(@Valid @RequestBody Batch batch) {
-        for (int i = 0; i < batch.getQuantity(); i++){
-            batchRepository.save(BatchEntity
+    @ResponseStatus(HttpStatus.CREATED)
+    public void incomeSocks(@Valid @RequestBody Batch batch) {
+        List<BatchEntity> batchEntityList = new ArrayList<>();
+        for (int i = 0; i < batch.getQuantity(); i++) {
+            //saveAll and List
+            batchEntityList.add(BatchEntity
                     .builder()
                     .color(batch.getColor())
                     .cottonPart(batch.getCottonPart())
@@ -28,18 +39,21 @@ public class BatchController {
     }
 
     @PostMapping(value = "/outcome")
-    public Integer outcomeSocks(@Valid @RequestBody Batch batch) {
-        int count = 0;
-            for (BatchEntity batchEntity : batchRepository.findAll()) {
-                if (batch.getCottonPart() == batchEntity.getCottonPart() & batch.getColor().equals(batchEntity.getColor())) {
-                    batchRepository.delete(batchEntity);
-                    count ++;
-                    if (count==batch.getQuantity()) {
-                        break;
-                    }
-                }
-            }
-        return 10;
+    public ResponseEntity<?> outcomeSocks(@Valid @RequestBody Batch batch) {
+        List<BatchEntity> batchEntities = batchRepository.findAllByColorAndCottonPart(batch.getColor(), batch.getCottonPart());
+        //if we deleted not all batchEntities the return 206
+        if (batchEntities.size() >= batch.getQuantity()) {
+            deleteBatches(batchEntities, batch.getQuantity());
+            return ResponseEntity.status(202).build();
+        } else {
+            deleteBatches(batchEntities, batchEntities.size());
+            return ResponseEntity.status(206).build();
+        }
+    }
+
+    private void deleteBatches(List<BatchEntity> batchEntities, int size) {
+        IntStream.range(0, size)
+                .forEach(value -> batchRepository.delete(batchEntities.get(value)));
     }
 
     @GetMapping(value = "/{id}")
