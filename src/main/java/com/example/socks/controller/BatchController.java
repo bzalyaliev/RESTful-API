@@ -48,6 +48,39 @@ public class BatchController {
                 .orElseThrow(() -> new NotFoundException("Could not find sock"));
     }
 
+    /*
+    ?color=red&cottonPart=2
+
+    Response:
+       1. empty list
+       2. default: operation = equal
+       3. exception: response.statusCode
+          a. 400 - bad request - best
+          b. 417 - expectation fails
+      -----
+      how to make it clean:
+      1. switch
+      2. if
+      3. Map<Operation, ...function?
+      4. Specification pattern: QuerySpecification; QuerySpecification
+     */
+    @GetMapping()
+    List<BatchEntity> search (@RequestParam String color, @RequestParam Integer cottonPart, @RequestParam Operation operation) {
+        //что если operation = null ?
+        switch (operation) {
+            case EQUAL:
+                return batchRepository.findBatchEntitiesWithColorPartEqual(color, cottonPart);
+            case MORE_THAN:
+                return batchRepository.findBatchEntitiesWithColorPartMoreThan(color, cottonPart);
+            case LESS_THAN:
+                return batchRepository.findBatchEntitiesWithColorPartLessThan(color, cottonPart);
+            default:
+                //operation == null
+                return Collections.emptyList();
+        }
+    }
+
+
     @DeleteMapping(value = "/{id}")
     void deleteSock(@PathVariable Long id) {
         batchRepository.deleteById(id);
