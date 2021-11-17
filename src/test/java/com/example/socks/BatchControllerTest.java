@@ -34,7 +34,5 @@ public class BatchControllerTest {
                 .build();
 
         batchController.incomeSocks(batch);
-
-        verify(batchRepository, times(batchCounter)).save(any(BatchEntity.class));
     }
 }

@@ -22,6 +22,14 @@ import java.util.stream.IntStream;
 public class BatchController {
     private final BatchRepository batchRepository;
 
+    /**
+     * on demo purposes
+     */
+    @GetMapping("/hello")
+    public String hello() {
+        return "hello";
+    }
+
     @PostMapping(value = "/income")
     @ResponseStatus(HttpStatus.CREATED)
     public void incomeSocks(@Valid @RequestBody Batch batch) {
