@@ -24,6 +24,7 @@ public class BatchController {
                     .quantity(1)
                     .build());
         }
+        batchRepository.saveAll(batchEntityList);
     }
 
     @PostMapping(value = "/outcome")
