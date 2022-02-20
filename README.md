@@ -1,3 +1,8 @@
+An application for automating the accounting of socks in the warehouse of the store. 
+The storekeeper must be able to take into account the arrival and release of socks, find out the total number of socks of a certain color and composition at a given time. 
+The external interface of the application is provided as an HTTP API (REST).
+
+
 ### How to build
 
 Jar:
